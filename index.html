@@ -304,7 +304,10 @@
       <canvas id="gmaps-chart" height="85"></canvas>
     </div>
 
-    <div class="section-label" style="margin-top:36px;">Reviews Google Maps</div>
+    <div class="section-label" style="margin-top:36px;">Reviews última semana con score &lt; 4.5</div>
+    <div class="reviews-grid" id="gmaps-alerts-grid"></div>
+
+    <div class="section-label" style="margin-top:36px;">Todas las reviews por oficina</div>
     <div class="reviews-filters" id="gmaps-filters"></div>
     <div class="reviews-grid" id="gmaps-grid"></div>
 
@@ -724,7 +727,9 @@ const D = {
       "titulo": "",
       "texto": "Great experience working with Baires! The team was super skilled, easy to work with, and always delivered high-quality results. Everything went smoothly and they often exceeded expectations.",
       "puesto": "",
-      "usuario": "Carlos Damian Oroña Molina"
+      "usuario": "Carlos Damian Oroña Molina",
+      "semana_review": "16",
+      "año_review": "2026"
     },
     {
       "plataforma": "Washington DC",
@@ -733,7 +738,9 @@ const D = {
       "titulo": "",
       "texto": "Working with BairesDev has been a fantastic experience! We especially appreciate how quick and responsive their communication is—they're always on top of things and ready to help. Their team is professional, efficient, and truly feels like …",
       "puesto": "",
-      "usuario": "Andrew Boone"
+      "usuario": "Andrew Boone",
+      "semana_review": "19",
+      "año_review": "2025"
     },
     {
       "plataforma": "Washington DC",
@@ -742,7 +749,9 @@ const D = {
       "titulo": "",
       "texto": "If you’d like your job done right, or done at all for that matter, hire literally anyone else",
       "puesto": "",
-      "usuario": "Will Read"
+      "usuario": "Will Read",
+      "semana_review": "19",
+      "año_review": "2025"
     },
     {
       "plataforma": "Washington DC",
@@ -751,7 +760,9 @@ const D = {
       "titulo": "",
       "texto": "Great experience with their software developers",
       "puesto": "",
-      "usuario": "Gabriel Elizondo"
+      "usuario": "Gabriel Elizondo",
+      "semana_review": "19",
+      "año_review": "2025"
     },
     {
       "plataforma": "Washington DC",
@@ -760,7 +771,9 @@ const D = {
       "titulo": "",
       "texto": "",
       "puesto": "",
-      "usuario": "Judith Lorena Pacheco"
+      "usuario": "Judith Lorena Pacheco",
+      "semana_review": "19",
+      "año_review": "2025"
     },
     {
       "plataforma": "Greensboro",
@@ -769,7 +782,9 @@ const D = {
       "titulo": "",
       "texto": "Great team to work with!",
       "puesto": "",
-      "usuario": "Francesca Saettone"
+      "usuario": "Francesca Saettone",
+      "semana_review": "19",
+      "año_review": "2025"
     },
     {
       "plataforma": "Washington DC",
@@ -778,7 +793,9 @@ const D = {
       "titulo": "",
       "texto": "Everyone was super polite.",
       "puesto": "",
-      "usuario": "Guillermo Casagrande"
+      "usuario": "Guillermo Casagrande",
+      "semana_review": "18",
+      "año_review": "2024"
     },
     {
       "plataforma": "Greensboro",
@@ -787,7 +804,9 @@ const D = {
       "titulo": "",
       "texto": "",
       "puesto": "",
-      "usuario": "Mark Holden"
+      "usuario": "Mark Holden",
+      "semana_review": "18",
+      "año_review": "2021"
     },
     {
       "plataforma": "Barcelona",
@@ -796,7 +815,9 @@ const D = {
       "titulo": "",
       "texto": "Excellent results. Very talented developers",
       "puesto": "",
-      "usuario": "Nathan Eryn"
+      "usuario": "Nathan Eryn",
+      "semana_review": "18",
+      "año_review": "2021"
     },
     {
       "plataforma": "Barcelona",
@@ -805,7 +826,9 @@ const D = {
       "titulo": "",
       "texto": "I love being able to work remotely; it's super convenient and allows me to better organize my schedule.",
       "puesto": "",
-      "usuario": "Marisa Gonzalez"
+      "usuario": "Marisa Gonzalez",
+      "semana_review": "18",
+      "año_review": "2021"
     },
     {
       "plataforma": "Washington DC",
@@ -814,7 +837,9 @@ const D = {
       "titulo": "",
       "texto": "",
       "puesto": "",
-      "usuario": "Andrew Boone"
+      "usuario": "Andrew Boone",
+      "semana_review": "19",
+      "año_review": "2026"
     },
     {
       "plataforma": "Washington DC",
@@ -823,7 +848,9 @@ const D = {
       "titulo": "",
       "texto": "",
       "puesto": "",
-      "usuario": "Will Read"
+      "usuario": "Will Read",
+      "semana_review": "19",
+      "año_review": "2026"
     },
     {
       "plataforma": "Washington DC",
@@ -832,7 +859,9 @@ const D = {
       "titulo": "",
       "texto": "",
       "puesto": "",
-      "usuario": "Gabriel Elizondo"
+      "usuario": "Gabriel Elizondo",
+      "semana_review": "19",
+      "año_review": "2026"
     },
     {
       "plataforma": "Washington DC",
@@ -841,7 +870,9 @@ const D = {
       "titulo": "",
       "texto": "",
       "puesto": "",
-      "usuario": "Guillermo Casagrande"
+      "usuario": "Guillermo Casagrande",
+      "semana_review": "19",
+      "año_review": "2026"
     },
     {
       "plataforma": "Washington DC",
@@ -850,7 +881,9 @@ const D = {
       "titulo": "",
       "texto": "",
       "puesto": "",
-      "usuario": "Judith Lorena Pacheco"
+      "usuario": "Judith Lorena Pacheco",
+      "semana_review": "19",
+      "año_review": "2026"
     },
     {
       "plataforma": "Greensboro",
@@ -859,7 +892,9 @@ const D = {
       "titulo": "",
       "texto": "",
       "puesto": "",
-      "usuario": "Francesca Saettone"
+      "usuario": "Francesca Saettone",
+      "semana_review": "19",
+      "año_review": "2026"
     },
     {
       "plataforma": "Greensboro",
@@ -868,7 +903,9 @@ const D = {
       "titulo": "",
       "texto": "",
       "puesto": "",
-      "usuario": "Mark Holden"
+      "usuario": "Mark Holden",
+      "semana_review": "19",
+      "año_review": "2026"
     },
     {
       "plataforma": "San Francisco",
@@ -877,7 +914,9 @@ const D = {
       "titulo": "",
       "texto": "",
       "puesto": "",
-      "usuario": "Carlos Damian Oroña Molina"
+      "usuario": "Carlos Damian Oroña Molina",
+      "semana_review": "19",
+      "año_review": "2026"
     },
     {
       "plataforma": "Barcelona",
@@ -886,7 +925,9 @@ const D = {
       "titulo": "",
       "texto": "",
       "puesto": "",
-      "usuario": "Nathan Eryn"
+      "usuario": "Nathan Eryn",
+      "semana_review": "19",
+      "año_review": "2026"
     },
     {
       "plataforma": "Barcelona",
@@ -895,10 +936,13 @@ const D = {
       "titulo": "",
       "texto": "",
       "puesto": "",
-      "usuario": "Marisa Gonzalez"
+      "usuario": "Marisa Gonzalez",
+      "semana_review": "19",
+      "año_review": "2026"
     }
   ],
-  "generated": "2026-05-05 18:50"
+  "gmapsAlerts": [],
+  "generated": "2026-05-05 18:55"
 };
 
 /* ── Helpers ────────────────────────────────────────── */
@@ -1164,32 +1208,43 @@ function initGmapsTab() {
     options: { ...baseOpts(1.0, 5.1), plugins: { ...baseOpts(1.0,5.1).plugins } }
   });
 
-  // Reviews
-  buildGmapsReviews(D.gmapsReviews || [], GM.colors);
+  // Alerts: last-week reviews with rating < 4.5
+  if (D.gmapsAlerts && D.gmapsAlerts.length) {
+    buildGmapsReviews(D.gmapsAlerts, GM.colors, 'gmaps-alerts-grid', true);
+  } else {
+    document.getElementById('gmaps-alerts-grid').innerHTML =
+      '<p style="color:var(--muted);font-size:0.8rem;padding:4px 0">Sin reviews por debajo de 4.5 esta semana.</p>';
+  }
+
+  // All reviews
+  buildGmapsReviews(D.gmapsReviews || [], GM.colors, 'gmaps-grid', false);
 }
 
-function buildGmapsReviews(reviews, locColors) {
+function buildGmapsReviews(reviews, locColors, gridId, showFilters) {
   if (!reviews.length) return;
-  const filtersEl = document.getElementById('gmaps-filters');
-  const gridEl    = document.getElementById('gmaps-grid');
-  const locs = ['Todas', ...new Set(reviews.map(r => r.plataforma).filter(Boolean))];
-  let active = 'Todas';
+  const gridEl = document.getElementById(gridId);
+  if (!gridEl) return;
 
-  locs.forEach(loc => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn' + (loc === 'Todas' ? ' active' : '');
-    btn.textContent = loc;
-    if (loc !== 'Todas') btn.style.borderColor = locColors[loc] || '#888';
-    btn.addEventListener('click', () => {
-      active = loc;
-      filtersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      gridEl.querySelectorAll('.review-card').forEach(c => {
-        c.classList.toggle('hidden', active !== 'Todas' && c.dataset.plat !== active);
+  if (showFilters) {
+    const filtersEl = document.getElementById('gmaps-filters');
+    const locs = ['Todas', ...new Set(reviews.map(r => r.plataforma).filter(Boolean))];
+    let active = 'Todas';
+    locs.forEach(loc => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn' + (loc === 'Todas' ? ' active' : '');
+      btn.textContent = loc;
+      if (loc !== 'Todas') btn.style.borderColor = locColors[loc] || '#888';
+      btn.addEventListener('click', () => {
+        active = loc;
+        filtersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        gridEl.querySelectorAll('.review-card').forEach(c => {
+          c.classList.toggle('hidden', active !== 'Todas' && c.dataset.plat !== active);
+        });
       });
+      filtersEl.appendChild(btn);
     });
-    filtersEl.appendChild(btn);
-  });
+  }
 
   reviews.forEach(r => {
     const color = locColors[r.plataforma] || '#888';

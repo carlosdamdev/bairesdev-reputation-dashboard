@@ -115,8 +115,9 @@ def build_data(csv_path: Path = HISTORY_CSV) -> dict:
     recent       = _load_recent_reviews(current_week, avg3)
     latest       = _load_latest_reviews(weeks=4)
     total_reviews = _latest_total_reviews()
-    gmaps        = _load_gmaps_data()
+    gmaps         = _load_gmaps_data()
     gmaps_reviews = _load_gmaps_reviews()
+    gmaps_alerts  = _load_gmaps_alerts()
 
     return {
         "platforms":     PLATFORMS_ORDER,
@@ -135,6 +136,7 @@ def build_data(csv_path: Path = HISTORY_CSV) -> dict:
         "totalReviews":  total_reviews,
         "gmaps":         gmaps,
         "gmapsReviews":  gmaps_reviews,
+        "gmapsAlerts":   gmaps_alerts,
         "generated":     datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
     }
 
@@ -282,25 +284,56 @@ def _load_gmaps_data() -> dict | None:
     }
 
 
+def _parse_gmaps_row(r: dict) -> dict:
+    try:
+        rating = float(r["Rating"]) if r.get("Rating") else 0
+    except (ValueError, TypeError):
+        rating = 0
+    return {
+        "plataforma":    r.get("Ubicacion", ""),
+        "fecha":         r.get("Fecha", ""),
+        "rating":        rating,
+        "titulo":        "",
+        "texto":         (r.get("Texto") or "")[:300],
+        "puesto":        "",
+        "usuario":       r.get("Nombre", ""),
+        "semana_review": r.get("Semana_Review", ""),
+        "año_review":    r.get("Año_Review", ""),
+    }
+
+
 def _load_gmaps_reviews() -> list:
+    """All Google Maps reviews, sorted newest first."""
     if not GMAPS_REVIEWS.exists():
         return []
     rows = []
     with open(GMAPS_REVIEWS, newline="", encoding="utf-8-sig") as f:
         for r in csv.DictReader(f):
+            rows.append(_parse_gmaps_row(r))
+    rows.sort(key=lambda r: r["fecha"] or "0000", reverse=True)
+    return rows
+
+
+def _load_gmaps_alerts() -> list:
+    """Google Maps reviews from last 2 weeks with rating < 4.5."""
+    if not GMAPS_REVIEWS.exists():
+        return []
+    today = datetime.date.today()
+    current_week = today.isocalendar()[1]
+    current_year = today.year
+    rows = []
+    with open(GMAPS_REVIEWS, newline="", encoding="utf-8-sig") as f:
+        for r in csv.DictReader(f):
+            parsed = _parse_gmaps_row(r)
+            if parsed["rating"] == 0 or parsed["rating"] >= 4.5:
+                continue
             try:
-                rating = float(r["Rating"]) if r.get("Rating") else 0
+                semana = int(parsed["semana_review"])
+                año    = int(parsed["año_review"])
             except (ValueError, TypeError):
-                rating = 0
-            rows.append({
-                "plataforma": r.get("Ubicacion", ""),
-                "fecha":      r.get("Fecha", ""),
-                "rating":     rating,
-                "titulo":     "",
-                "texto":      (r.get("Texto") or "")[:300],
-                "puesto":     "",
-                "usuario":    r.get("Nombre", ""),
-            })
+                continue
+            if año == current_year and semana in (current_week, current_week - 1):
+                rows.append(parsed)
     rows.sort(key=lambda r: r["fecha"] or "0000", reverse=True)
     return rows
 
@@ -611,7 +644,10 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       <canvas id="gmaps-chart" height="85"></canvas>
     </div>
 
-    <div class="section-label" style="margin-top:36px;">Reviews Google Maps</div>
+    <div class="section-label" style="margin-top:36px;">Reviews última semana con score &lt; 4.5</div>
+    <div class="reviews-grid" id="gmaps-alerts-grid"></div>
+
+    <div class="section-label" style="margin-top:36px;">Todas las reviews por oficina</div>
     <div class="reviews-filters" id="gmaps-filters"></div>
     <div class="reviews-grid" id="gmaps-grid"></div>
 
@@ -885,32 +921,43 @@ function initGmapsTab() {
     options: { ...baseOpts(1.0, 5.1), plugins: { ...baseOpts(1.0,5.1).plugins } }
   });
 
-  // Reviews
-  buildGmapsReviews(D.gmapsReviews || [], GM.colors);
+  // Alerts: last-week reviews with rating < 4.5
+  if (D.gmapsAlerts && D.gmapsAlerts.length) {
+    buildGmapsReviews(D.gmapsAlerts, GM.colors, 'gmaps-alerts-grid', true);
+  } else {
+    document.getElementById('gmaps-alerts-grid').innerHTML =
+      '<p style="color:var(--muted);font-size:0.8rem;padding:4px 0">Sin reviews por debajo de 4.5 esta semana.</p>';
+  }
+
+  // All reviews
+  buildGmapsReviews(D.gmapsReviews || [], GM.colors, 'gmaps-grid', false);
 }
 
-function buildGmapsReviews(reviews, locColors) {
+function buildGmapsReviews(reviews, locColors, gridId, showFilters) {
   if (!reviews.length) return;
-  const filtersEl = document.getElementById('gmaps-filters');
-  const gridEl    = document.getElementById('gmaps-grid');
-  const locs = ['Todas', ...new Set(reviews.map(r => r.plataforma).filter(Boolean))];
-  let active = 'Todas';
+  const gridEl = document.getElementById(gridId);
+  if (!gridEl) return;
 
-  locs.forEach(loc => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn' + (loc === 'Todas' ? ' active' : '');
-    btn.textContent = loc;
-    if (loc !== 'Todas') btn.style.borderColor = locColors[loc] || '#888';
-    btn.addEventListener('click', () => {
-      active = loc;
-      filtersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      gridEl.querySelectorAll('.review-card').forEach(c => {
-        c.classList.toggle('hidden', active !== 'Todas' && c.dataset.plat !== active);
+  if (showFilters) {
+    const filtersEl = document.getElementById('gmaps-filters');
+    const locs = ['Todas', ...new Set(reviews.map(r => r.plataforma).filter(Boolean))];
+    let active = 'Todas';
+    locs.forEach(loc => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn' + (loc === 'Todas' ? ' active' : '');
+      btn.textContent = loc;
+      if (loc !== 'Todas') btn.style.borderColor = locColors[loc] || '#888';
+      btn.addEventListener('click', () => {
+        active = loc;
+        filtersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        gridEl.querySelectorAll('.review-card').forEach(c => {
+          c.classList.toggle('hidden', active !== 'Todas' && c.dataset.plat !== active);
+        });
       });
+      filtersEl.appendChild(btn);
     });
-    filtersEl.appendChild(btn);
-  });
+  }
 
   reviews.forEach(r => {
     const color = locColors[r.plataforma] || '#888';
