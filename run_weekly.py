@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 BairesDev — Weekly Run
-Ejecuta en orden: ratings → reviews → dashboard
+Ejecuta en orden: ratings → reviews → Google Maps → dashboard
 
 Uso:
     python run_weekly.py
@@ -68,15 +68,19 @@ def main():
     ok = True
 
     # ── 1. Ratings (+ Google Sheets + historia CSV) ───────────
-    ok &= _run("PASO 1 / 3 — Ratings", ["scraper_ratings.py", "--all"])
+    ok &= _run("PASO 1 / 4 — Ratings", ["scraper_ratings.py", "--all"])
 
     # ── 2. Reviews ────────────────────────────────────────────
-    ok &= _run("PASO 2 / 3 — Reviews", ["reviews_scraper.py", "--all"])
+    ok &= _run("PASO 2 / 4 — Reviews", ["reviews_scraper.py", "--all"])
 
-    # ── 3. Dashboard (reconstruye con ratings + reviews nuevos)
-    ok &= _run("PASO 3 / 3 — Dashboard", ["generate_dashboard.py"])
+    # ── 3. Google Maps ────────────────────────────────────────
+    _run("PASO 3 / 4 — Google Maps", ["gmaps_scraper.py", "--all"])
+    # Google Maps no bloquea el pipeline si falla
 
-    # ── 4. Git commit + push ──────────────────────────────────
+    # ── 4. Dashboard (reconstruye con todos los datos nuevos) ─
+    ok &= _run("PASO 4 / 4 — Dashboard", ["generate_dashboard.py"])
+
+    # ── 5. Git commit + push ──────────────────────────────────
     if ok:
         _git_push()
 
@@ -107,6 +111,8 @@ def _git_push():
         list(HERE.glob("bairesdev_ratings_*.csv")) +
         [HERE / "bairesdev_history.csv",
          HERE / "bairesdev_reviews.csv",
+         HERE / "gmaps_history.csv",
+         HERE / "gmaps_reviews.csv",
          HERE / "index.html"]
     )
     stage = subprocess.run(
