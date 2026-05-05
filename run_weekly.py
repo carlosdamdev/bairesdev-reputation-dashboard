@@ -21,7 +21,7 @@ import webbrowser
 from pathlib import Path
 
 HERE = Path(__file__).parent
-DASHBOARD = HERE / "dashboard.html"
+DASHBOARD = HERE / "index.html"
 
 
 def _cdp_ok() -> bool:
@@ -84,7 +84,7 @@ def main():
     print("\n" + "=" * 60)
     if ok:
         print("  Listo. Semana procesada correctamente.")
-        print("  Dashboard público: https://carlosdamdev.github.io/bairesdev-reputation-dashboard/dashboard.html")
+        print("  Dashboard público: https://carlosdamdev.github.io/bairesdev-reputation-dashboard/index.html")
         try:
             webbrowser.open(DASHBOARD.as_uri())
         except Exception:
@@ -107,7 +107,7 @@ def _git_push():
         list(HERE.glob("bairesdev_ratings_*.csv")) +
         [HERE / "bairesdev_history.csv",
          HERE / "bairesdev_reviews.csv",
-         HERE / "dashboard.html"]
+         HERE / "index.html"]
     )
     stage = subprocess.run(
         ["git", "add"] + [str(f) for f in files if f.exists()],

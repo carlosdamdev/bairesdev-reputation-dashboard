@@ -14,7 +14,7 @@ sys.stdout.reconfigure(encoding="utf-8")
 
 HISTORY_CSV  = Path(__file__).parent / "bairesdev_history.csv"
 REVIEWS_CSV  = Path(__file__).parent / "bairesdev_reviews.csv"
-DASHBOARD_HTML = Path(__file__).parent / "dashboard.html"
+DASHBOARD_HTML = Path(__file__).parent / "index.html"
 
 
 def _latest_total_reviews() -> dict:
