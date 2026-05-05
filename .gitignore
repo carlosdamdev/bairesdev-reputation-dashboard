@@ -1,0 +1,14 @@
+# Credenciales — NUNCA subir
+credentials.json
+token.json
+token.pickle
+
+# Debug / temporales
+*_debug.html
+debug_pages/
+__pycache__/
+*.pyc
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
