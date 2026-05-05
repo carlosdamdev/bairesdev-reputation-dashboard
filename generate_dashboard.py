@@ -259,6 +259,15 @@ def _load_gmaps_data() -> dict | None:
                     prev_scores[loc] = v
                     break
 
+    # Count total scraped reviews per location
+    total_reviews: dict[str, int] = {loc: 0 for loc in GMAPS_LOC_NAMES}
+    if GMAPS_REVIEWS.exists():
+        with open(GMAPS_REVIEWS, newline="", encoding="utf-8-sig") as f:
+            for r in csv.DictReader(f):
+                loc = r.get("Ubicacion", "")
+                if loc in total_reviews:
+                    total_reviews[loc] += 1
+
     return {
         "locations":     GMAPS_LOC_NAMES,
         "colors":        GMAPS_COLORS,
@@ -269,6 +278,7 @@ def _load_gmaps_data() -> dict | None:
         "currentWeek":   current_week,
         "currentScores": current_scores,
         "prevScores":    prev_scores,
+        "totalReviews":  total_reviews,
     }
 
 
@@ -849,6 +859,10 @@ function initGmapsTab() {
             <span class="arrow">${arrow(dw)}</span>
             <strong>${dw !== 0 ? sign(dw)+Math.abs(dw).toFixed(2) : 'Sin cambio'}</strong>
             <span class="label">vs sem. anterior</span>
+          </div>
+          <div class="delta flat">
+            <strong>${GM.totalReviews ? (GM.totalReviews[loc] ?? '—') : '—'}</strong>
+            <span class="label">reviews totales</span>
           </div>
         </div>
       </div>`);

@@ -708,6 +708,12 @@ const D = {
       "Greensboro": 5.0,
       "San Francisco": 4.0,
       "Barcelona": 5.0
+    },
+    "totalReviews": {
+      "Washington DC": 10,
+      "Greensboro": 4,
+      "San Francisco": 2,
+      "Barcelona": 4
     }
   },
   "gmapsReviews": [
@@ -719,132 +725,6 @@ const D = {
       "texto": "Great experience working with Baires! The team was super skilled, easy to work with, and always delivered high-quality results. Everything went smoothly and they often exceeded expectations.",
       "puesto": "",
       "usuario": "Carlos Damian Oroña Molina"
-    },
-    {
-      "plataforma": "SF",
-      "fecha": "2026-04-01",
-      "rating": 1.0,
-      "titulo": "",
-      "texto": "",
-      "puesto": "",
-      "usuario": "Isadora de Andrade"
-    },
-    {
-      "plataforma": "Arg",
-      "fecha": "2026-04-01",
-      "rating": 1.0,
-      "titulo": "",
-      "texto": "Thanks for the negative reviews, I never applied to this company and it seemed very strange that I received an email out of the blue saying that I was one step away from finishing my registration. With that, they are notoriously data thieves.",
-      "puesto": "",
-      "usuario": "Toothless Chimuelo"
-    },
-    {
-      "plataforma": "Toronto",
-      "fecha": "2026-04-01",
-      "rating": 1.0,
-      "titulo": "",
-      "texto": "Hey....stop spam emailing people.",
-      "puesto": "",
-      "usuario": "Andrew Dalrymple"
-    },
-    {
-      "plataforma": "SF",
-      "fecha": "2026-04-01",
-      "rating": 1.0,
-      "titulo": "",
-      "texto": "constant spam emails from this business.",
-      "puesto": "",
-      "usuario": "Andrew Dalrymple"
-    },
-    {
-      "plataforma": "VA",
-      "fecha": "2026-03-01",
-      "rating": 1.0,
-      "titulo": "",
-      "texto": "If you’d like your job done right, or done at all for that matter, hire literally anyone else",
-      "puesto": "",
-      "usuario": "Will Read"
-    },
-    {
-      "plataforma": "Arg",
-      "fecha": "2026-03-01",
-      "rating": 1.0,
-      "titulo": "",
-      "texto": "Don't be fooled, this company is stealing personal data!\nI have never applied with them and I received an email where I only needed one step to complete my registration, which I never even got to start!",
-      "puesto": "",
-      "usuario": "Reinaldo Useche"
-    },
-    {
-      "plataforma": "Mex",
-      "fecha": "2026-03-01",
-      "rating": 1.0,
-      "titulo": "",
-      "texto": "I saw several vacancies from this company but it seemed strange to me that they had a very bad rating, then I looked here and they are worse",
-      "puesto": "",
-      "usuario": "Arturo Corona"
-    },
-    {
-      "plataforma": "SF",
-      "fecha": "2026-03-01",
-      "rating": 1.0,
-      "titulo": "",
-      "texto": "this company is the champion of spamming - she never never stop even after asking - STOP SPAMMING",
-      "puesto": "",
-      "usuario": "Philip McKenzie"
-    },
-    {
-      "plataforma": "Mex",
-      "fecha": "2026-02-01",
-      "rating": 1.0,
-      "titulo": "",
-      "texto": "It is very easy to realize that it is a terrible company to work for and to be a member of, its 5* reviews are obviously false as well as the specifications of its vacancies, if you have the opportunity to interact professionally with this company, miss it.",
-      "puesto": "",
-      "usuario": "Mario Garcia"
-    },
-    {
-      "plataforma": "SF",
-      "fecha": "2026-02-01",
-      "rating": 5.0,
-      "titulo": "",
-      "texto": "Amazing software development company.",
-      "puesto": "",
-      "usuario": "Maria Carolina Anguita"
-    },
-    {
-      "plataforma": "Bogota",
-      "fecha": "2025-08-01",
-      "rating": 1.0,
-      "titulo": "",
-      "texto": "Mediante múltiples testimonios de personas que se han postulado en esta dichosa empresa, la mayoría de ellas, incluyéndome estamos insatisfechos, realizan demasiadas pruebas y resulta que no se cargan, el proceso es demasiado largo y tedioso, no hay feedback del proceso, no da confianza y los salari",
-      "puesto": "",
-      "usuario": "Daniel Ocampo"
-    },
-    {
-      "plataforma": "Arg",
-      "fecha": "2025-08-01",
-      "rating": 1.0,
-      "titulo": "",
-      "texto": "",
-      "puesto": "",
-      "usuario": "Alan P."
-    },
-    {
-      "plataforma": "Arg",
-      "fecha": "2025-08-01",
-      "rating": 1.0,
-      "titulo": "",
-      "texto": "Un insulto los salarios. Vayan a la india o vietnam. Soy un desarrollador respetable.",
-      "puesto": "",
-      "usuario": "Martin Santamaría"
-    },
-    {
-      "plataforma": "Arg",
-      "fecha": "2025-06-01",
-      "rating": 1.0,
-      "titulo": "",
-      "texto": "",
-      "puesto": "",
-      "usuario": "Gonzalo Martinez"
     },
     {
       "plataforma": "Washington DC",
@@ -1018,7 +898,7 @@ const D = {
       "usuario": "Marisa Gonzalez"
     }
   ],
-  "generated": "2026-05-05 18:45"
+  "generated": "2026-05-05 18:50"
 };
 
 /* ── Helpers ────────────────────────────────────────── */
@@ -1258,6 +1138,10 @@ function initGmapsTab() {
             <span class="arrow">${arrow(dw)}</span>
             <strong>${dw !== 0 ? sign(dw)+Math.abs(dw).toFixed(2) : 'Sin cambio'}</strong>
             <span class="label">vs sem. anterior</span>
+          </div>
+          <div class="delta flat">
+            <strong>${GM.totalReviews ? (GM.totalReviews[loc] ?? '—') : '—'}</strong>
+            <span class="label">reviews totales</span>
           </div>
         </div>
       </div>`);

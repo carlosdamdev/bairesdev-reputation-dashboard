@@ -469,8 +469,19 @@ def _read_sheet_reviews() -> list[dict]:
         nombre    = str(row[1]).strip() if len(row) > 1 else ""
         texto     = str(row[3]).strip() if len(row) > 3 else ""
         rat_raw   = str(row[4]).strip() if len(row) > 4 else ""
-        ubicacion = str(row[5]).strip() if len(row) > 5 else ""
-        fecha_raw = str(row[6]).strip() if len(row) > 6 else ""
+        ubicacion_raw = str(row[5]).strip() if len(row) > 5 else ""
+        fecha_raw     = str(row[6]).strip() if len(row) > 6 else ""
+
+        # Map sheet abbreviations to canonical location names; skip unknown locations
+        _LOC_MAP = {
+            "sf": "San Francisco", "san francisco": "San Francisco",
+            "va": "Washington DC",  "washington dc": "Washington DC", "dc": "Washington DC",
+            "greensboro": "Greensboro", "gso": "Greensboro",
+            "barcelona": "Barcelona",   "bcn": "Barcelona",
+        }
+        ubicacion = _LOC_MAP.get(ubicacion_raw.lower(), "")
+        if not ubicacion:
+            continue  # skip reviews for locations outside our 4 offices
 
         try:
             rating = float(rat_raw.replace(",", "."))
