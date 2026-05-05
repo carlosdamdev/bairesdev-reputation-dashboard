@@ -13,6 +13,7 @@ Prerequisito (una sola vez por sesión):
     4. Correr este script
 """
 
+import datetime
 import subprocess
 import sys
 import urllib.request
@@ -75,11 +76,15 @@ def main():
     # ── 3. Dashboard (reconstruye con ratings + reviews nuevos)
     ok &= _run("PASO 3 / 3 — Dashboard", ["generate_dashboard.py"])
 
+    # ── 4. Git commit + push ──────────────────────────────────
+    if ok:
+        _git_push()
+
     # ── Resultado final ───────────────────────────────────────
     print("\n" + "=" * 60)
     if ok:
         print("  Listo. Semana procesada correctamente.")
-        print(f"  Dashboard: {DASHBOARD}")
+        print("  Dashboard público: https://carlosdamdev.github.io/bairesdev-reputation-dashboard/dashboard.html")
         try:
             webbrowser.open(DASHBOARD.as_uri())
         except Exception:
@@ -87,6 +92,41 @@ def main():
     else:
         print("  Algún paso falló — revisá los mensajes de arriba.")
     print("=" * 60 + "\n")
+
+
+def _git_push():
+    print(f"\n{'='*60}")
+    print("  PASO 4 / 4 — Publicando en GitHub")
+    print(f"{'='*60}")
+    week = datetime.date.today().isocalendar()[1]
+    year = datetime.date.today().year
+    msg  = f"Semana {week} / {year}"
+
+    # Stage archivos de datos + dashboard
+    files = (
+        list(HERE.glob("bairesdev_ratings_*.csv")) +
+        [HERE / "bairesdev_history.csv",
+         HERE / "bairesdev_reviews.csv",
+         HERE / "dashboard.html"]
+    )
+    stage = subprocess.run(
+        ["git", "add"] + [str(f) for f in files if f.exists()],
+        cwd=HERE
+    )
+    if stage.returncode != 0:
+        print("  [Git] Error en git add")
+        return
+
+    commit = subprocess.run(["git", "commit", "-m", msg], cwd=HERE)
+    if commit.returncode != 0:
+        print("  [Git] Sin cambios nuevos para commitear.")
+        return
+
+    push = subprocess.run(["git", "push"], cwd=HERE)
+    if push.returncode == 0:
+        print(f"  [Git] Publicado: {msg}")
+    else:
+        print("  [Git] Error en git push — verificá tu conexión o credenciales.")
 
 
 if __name__ == "__main__":
