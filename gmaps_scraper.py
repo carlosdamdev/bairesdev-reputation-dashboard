@@ -207,7 +207,7 @@ def _extract_reviews(page: Page, loc_name: str) -> list[dict]:
     reviews = []
     today = datetime.date.today()
 
-    # Try to click into the reviews tab — one attempt, short timeout
+    # Try to click into the reviews tab
     try:
         btn = page.locator(
             "button[aria-label*='reviews'], button[aria-label*='Reviews'], "
@@ -218,15 +218,59 @@ def _extract_reviews(page: Page, loc_name: str) -> list[dict]:
     except Exception:
         pass
 
-    # Scroll to load reviews (fewer iterations, shorter waits)
-    for _ in range(4):
-        page.keyboard.press("End")
-        page.wait_for_timeout(500)
+    # Scroll the reviews panel — Google Maps uses a scrollable div, not the window.
+    # Try to find and scroll the inner panel container first; fall back to keyboard.
+    # Find the scrollable reviews panel — try multiple known selectors
+    panel_sels = [
+        ".m6QErb[aria-label]",
+        ".DxyBCb",
+        "div[role='feed']",
+        ".section-scrollbox",
+        ".siAUzd-neVct-Q3DXx-BvBYQ",   # newer Maps panel
+    ]
+    panel = None
+    for sel in panel_sels:
+        try:
+            el = page.locator(sel).first
+            el.wait_for(timeout=800)
+            panel = el
+            break
+        except Exception:
+            continue
 
-    # Locate review containers
-    containers = page.locator("[data-review-id]").all()
-    if not containers:
-        containers = page.locator(".jJc9Ad").all()
+    # Iterative scroll: keep going until container count stabilises
+    REVIEW_SELS = ["[data-review-id]", ".jftiEf", ".jJc9Ad"]
+    prev_count = 0
+    stable_rounds = 0
+    for _ in range(20):                        # up to 20 scroll attempts
+        if panel:
+            try:
+                panel.evaluate("el => el.scrollTop += 1500")
+            except Exception:
+                page.keyboard.press("End")
+        else:
+            page.mouse.wheel(200, 400, delta_y=1500)
+        page.wait_for_timeout(600)
+
+        count = 0
+        for sel in REVIEW_SELS:
+            count = page.locator(sel).count()
+            if count:
+                break
+        if count == prev_count:
+            stable_rounds += 1
+            if stable_rounds >= 3:      # 3 rounds with no new reviews → done
+                break
+        else:
+            stable_rounds = 0
+        prev_count = count
+
+    # Final container list
+    containers = []
+    for sel in REVIEW_SELS:
+        containers = page.locator(sel).all()
+        if containers:
+            break
 
     for container in containers[:40]:
         try:
