@@ -116,7 +116,6 @@ def build_data(csv_path: Path = HISTORY_CSV) -> dict:
     latest       = _load_latest_reviews(weeks=4)
     total_reviews = _latest_total_reviews()
     gmaps         = _load_gmaps_data()
-    gmaps_reviews = _load_gmaps_reviews()
     gmaps_alerts  = _load_gmaps_alerts()
 
     return {
@@ -135,7 +134,6 @@ def build_data(csv_path: Path = HISTORY_CSV) -> dict:
         "avg3":          avg3,
         "totalReviews":  total_reviews,
         "gmaps":         gmaps,
-        "gmapsReviews":  gmaps_reviews,
         "gmapsAlerts":   gmaps_alerts,
         "generated":     datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
     }
@@ -647,10 +645,6 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     <div class="section-label" style="margin-top:36px;">Reviews última semana con score &lt; 4.5</div>
     <div class="reviews-grid" id="gmaps-alerts-grid"></div>
 
-    <div class="section-label" style="margin-top:36px;">Todas las reviews por oficina</div>
-    <div class="reviews-filters" id="gmaps-filters"></div>
-    <div class="reviews-grid" id="gmaps-grid"></div>
-
   </div><!-- /gmaps-pane -->
 
 </div><!-- /page -->
@@ -923,14 +917,11 @@ function initGmapsTab() {
 
   // Alerts: last-week reviews with rating < 4.5
   if (D.gmapsAlerts && D.gmapsAlerts.length) {
-    buildGmapsReviews(D.gmapsAlerts, GM.colors, 'gmaps-alerts-grid', true);
+    buildGmapsReviews(D.gmapsAlerts, GM.colors, 'gmaps-alerts-grid', false);
   } else {
     document.getElementById('gmaps-alerts-grid').innerHTML =
       '<p style="color:var(--muted);font-size:0.8rem;padding:4px 0">Sin reviews por debajo de 4.5 esta semana.</p>';
   }
-
-  // All reviews
-  buildGmapsReviews(D.gmapsReviews || [], GM.colors, 'gmaps-grid', false);
 }
 
 function buildGmapsReviews(reviews, locColors, gridId, showFilters) {
